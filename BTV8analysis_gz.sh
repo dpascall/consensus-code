@@ -96,7 +96,7 @@ do
 	
 		##call SNPs
 		lofreq call --no-default-filter -f ./"$3" -o BTV8a.vcf "$1"_BTV8_tanoti.bam
-		lofreq filter --cov-min 1 -i BTV8a.vcf -o BTV8.vcf
+		lofreq filter --cov-min 0 -i BTV8a.vcf -o BTV8.vcf
 		rm -f BTV8a.vcf
 		
 		##generate copy for bitwise checks
@@ -135,7 +135,7 @@ do
 			
 			##call SNPs
 			lofreq call --no-default-filter -f ./"$3" -o BTV8a.vcf "$1"_BTV8_tanoti.bam
-			lofreq filter --cov-min 1 -i BTV8a.vcf -o BTV8.vcf
+			lofreq filter --cov-min 0 -i BTV8a.vcf -o BTV8.vcf
 			rm -f BTV8a.vcf
 		
 			##generate copy for bitwise checks
@@ -171,7 +171,7 @@ rm -f "$1"_BTV8_tanoti_paired.bam "$1"_BTV8_tanoti_unpaired.bam "$1"_BTV8_tanoti
 
 ##call SNPs
 lofreq call --no-default-filter -f ./"$3" -o BTV8a.vcf "$1"_BTV8_tanoti.bam
-lofreq filter --cov-min 1 -i BTV8a.vcf -o BTV8.vcf
+lofreq filter --cov-min 0 -i BTV8a.vcf -o BTV8.vcf
 rm -f BTV8a.vcf
 
 ##generate consensus via R script and via mpileup for bitwise comparison
