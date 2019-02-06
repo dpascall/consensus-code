@@ -181,30 +181,10 @@ Rscript ../consensusfinal.R BTV8.vcf ./"$3"_working.fasta
 cat "$3"_working.fasta
 cat BTV8.vcf
 
-cp "$3"_working.fasta $3
-
 ##keep final vcf
 mkdir BTV8final
 
 mv ./BTV8.vcf ./BTV8final/BTV8.vcf
-
-##remove copy
-rm -f temp.fasta "$1"_BTV8_tanoti.bam "$1"_BTV8_tanoti.bam.bai "$3"_working.fasta.fai "$3".fai "$3"_mpileup.fq
-
-##map to original unFLASHed reads for final consensus generation
-tanoti -u 0 -r $3 -i "$1"_1.fq "$1"_2.fq -o "$1"_BTV8_tanoti_paired.sam -p 1
-tanoti -u 0 -r $3 -i "$1".mergedoriginalsingletons.fq -o "$1"_BTV8_tanoti_unpaired.sam
-samtools view -bS "$1"_BTV8_tanoti_paired.sam > "$1"_BTV8_tanoti_paired.bam
-samtools view -bS "$1"_BTV8_tanoti_unpaired.sam > "$1"_BTV8_tanoti_unpaired.bam
-rm -f "$1"_BTV8_tanoti_paired.sam "$1"_BTV8_tanoti_unpaired.sam
-samtools sort "$1"_BTV8_tanoti_paired.bam -o "$1"_BTV8_tanoti_paired.bam
-samtools index "$1"_BTV8_tanoti_paired.bam
-samtools sort "$1"_BTV8_tanoti_unpaired.bam -o "$1"_BTV8_tanoti_unpaired.bam
-samtools index "$1"_BTV8_tanoti_unpaired.bam
-samtools merge "$1"_BTV8_tanoti.bam "$1"_BTV8_tanoti_paired.bam "$1"_BTV8_tanoti_unpaired.bam
-samtools sort "$1"_BTV8_tanoti.bam -o "$1"_BTV8_tanoti.bam
-samtools index "$1"_BTV8_tanoti.bam
-rm -f "$1"_BTV8_tanoti_paired.bam "$1"_BTV8_tanoti_unpaired.bam "$1"_BTV8_tanoti_paired.bam.bai "$1"_BTV8_tanoti_unpaired.bam.bai
 
 ##convert any areas with less than 5 reads to Ns for both R script...
 samtools depth -aa "$1"_BTV8_tanoti.bam > depth.txt
@@ -213,7 +193,8 @@ cp "$3"_working.fasta $3
 ##...and mpileup
 Rscript ../finaldepthcorrection.R depth.txt ./"$3"_mpileup.fasta
 
-rm -f "$1"_BTV8_tanoti.bam "$1"_BTV8_tanoti.bam.bai "$1"_1.fq "$1"_2.fq
+##remove copy
+rm -f temp.fasta "$1"_BTV8_tanoti.bam "$1"_BTV8_tanoti.bam.bai "$3"_working.fasta.fai "$3".fai "$3"_mpileup.fq "$1"_1.fq "$1"_2.fq
 
 ##check if masked mpileup and R script consensuses are different, if different save locations that do not match
 Rscript ../sequencecomparison.R ./"$3" ./"$3"_mpileup.fasta ../"$3"
